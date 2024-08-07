@@ -64,30 +64,22 @@ class Stack {
         }
         ~Stack(){
             while (first != nullptr){
-                Node<T>* tmp = first;
-                first = first->next;
-                delete tmp;
+                pop();
             }
         }
 
         void push(Node<T>* insertedNode){
             insertedNode->next = first;
             first = insertedNode;
-
-            std::cout << "Push: " << insertedNode->value << "\n";
         }
         void push(T value){
             first = new Node<int>(value, first);
-
-            std::cout << "Push: " << value << "\n";
         }
         T pop(){
             Node<T>* tmp = first;
             T removedValue = tmp->value;
             first = first->next;
             delete tmp;
-
-            std::cout << "Pop: " << removedValue << "\n";
             return removedValue;
         }
 
