@@ -71,8 +71,8 @@ class Matrix{
     }
 
     void Insert(int value){
-        if(quantityOfItens < (this->columns * this->lines)){
-            int i = quantityOfItens;
+        if(this->quantityOfItens < (this->columns * this->lines)){
+            int i = this->quantityOfItens;
             Cell *aux = this->start;
             while(i >= this->columns){
                 i -= this->columns;
@@ -86,6 +86,30 @@ class Matrix{
             aux->element = value;
             quantityOfItens++;
         }
+    }
+
+
+    int Remove(){
+        int resp = 0;
+        if(this->quantityOfItens > 0){
+            int i = this->quantityOfItens;
+            //printf("I - 1: %i\n",i);
+            Cell *aux = this->start;
+            while(i > this->columns){
+                i -= this->columns;
+                aux = aux->lower;
+            }
+            //printf("I - 2: %i\n",i);
+            if(i > 0){
+                for(int j = 0; j < (i - 1); j++){
+                    aux = aux->right;
+                }
+            }
+            resp = aux->element;
+            aux->element = -1;
+            this->quantityOfItens--;
+        }
+        return resp;
     }
 
     void Show(){
@@ -104,6 +128,25 @@ class Matrix{
         
     }
 
+    bool Search(int element){
+        Cell *aux = this->start;
+        bool resp = false;
+        for(int i = 0; i < this->lines; i++){
+            Cell *auy = aux;
+            for(int j = 0; j < this->columns; j++){
+                if(auy->element == element){
+                    resp = true;
+                    i = this->lines;
+                    j = this->columns;
+                }
+                auy = auy->right;
+            }
+            if(i < this->lines - 1){
+                aux = aux->lower;
+            }
+        }
+        return resp;
+    }
     //Matrix Constructors Methods
     Matrix(int columns, int lines){
         this->columns = columns;
@@ -121,9 +164,9 @@ class Matrix{
 
 };
 
+    
 int main(void){
     Matrix *matrix;
-    printf("Teste\n");
     matrix = new Matrix(2, 2);
     printf("Lines: %i - Columns: %i\n\n", matrix->lines, matrix->columns);
     matrix->Show();
@@ -140,28 +183,46 @@ int main(void){
     matrix->Insert(18);
     matrix->Show();
     printf("\n");
-    matrix->Insert(21);
+    matrix->Insert(21);(matrix->columns * matrix->lines);
     matrix->Show();
     printf("\n");
-        printf("Teste\n");
-    matrix = new Matrix(3, 3);
-    printf("Lines: %i - Columns: %i\n\n", matrix->lines, matrix->columns);
+    printf("Removing Elements: \n");
+    for(int i = 0; i < (matrix->columns * matrix->lines); i++){
+        int removed = matrix->Remove();
+        printf("Removed Element: %i\n", removed);
+    }
+    printf("\nMatrix after removing all elements:\n");
     matrix->Show();
     printf("\n");
-    matrix->Insert(9);
-    matrix->Show();
+    
+    Matrix *matrix2 = new Matrix(3, 3);
+    printf("Lines: %i - Columns: %i\n\n", matrix2->lines, matrix2->columns);
+    matrix2->Show();
     printf("\n");
-    matrix->Insert(12);
-    matrix->Show();
+    matrix2->Insert(9);
+    matrix2->Show();
     printf("\n");
-    matrix->Insert(15);
-    matrix->Show();
+    matrix2->Insert(12);
+    matrix2->Show();
     printf("\n");
-    matrix->Insert(18);
-    matrix->Show();
+    matrix2->Insert(15);
+    matrix2->Show();
     printf("\n");
-    matrix->Insert(21);
-    matrix->Show();
+    matrix2->Insert(18);
+    matrix2->Show();
     printf("\n");
+    matrix2->Insert(21);
+    matrix2->Show();
+    printf("\nSearching Elements:\n");
+    int vector[] = {0, 1, 9, 15, 20, 18, 21, 4, 3, 17};
+    for(int i = 0; i < 10; i++){
+        printf("Searched Element: %i\n", vector[i]);
+        if(matrix2->Search(vector[i])){
+            printf("Found\n");
+        }
+        else{
+            printf("Not found\n");
+        }
+    }
     return 0;
 }

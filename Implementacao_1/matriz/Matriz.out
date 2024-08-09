@@ -1,0 +1,77 @@
+Lines: 2 - Columns: 2
+
+Val[0][0]: -1 Val[0][1]: -1 
+Val[1][0]: -1 Val[1][1]: -1 
+
+Val[0][0]: 9 Val[0][1]: -1 
+Val[1][0]: -1 Val[1][1]: -1 
+
+Val[0][0]: 9 Val[0][1]: 12 
+Val[1][0]: -1 Val[1][1]: -1 
+
+Val[0][0]: 9 Val[0][1]: 12 
+Val[1][0]: 15 Val[1][1]: -1 
+
+Val[0][0]: 9 Val[0][1]: 12 
+Val[1][0]: 15 Val[1][1]: 18 
+
+Val[0][0]: 9 Val[0][1]: 12 
+Val[1][0]: 15 Val[1][1]: 18 
+
+Removing Elements: 
+Removed Element: 18
+Removed Element: 15
+Removed Element: 12
+Removed Element: 9
+
+Matrix after removing all elements:
+Val[0][0]: -1 Val[0][1]: -1 
+Val[1][0]: -1 Val[1][1]: -1 
+
+Lines: 3 - Columns: 3
+
+Val[0][0]: -1 Val[0][1]: -1 Val[0][2]: -1 
+Val[1][0]: -1 Val[1][1]: -1 Val[1][2]: -1 
+Val[2][0]: -1 Val[2][1]: -1 Val[2][2]: -1 
+
+Val[0][0]: 9 Val[0][1]: -1 Val[0][2]: -1 
+Val[1][0]: -1 Val[1][1]: -1 Val[1][2]: -1 
+Val[2][0]: -1 Val[2][1]: -1 Val[2][2]: -1 
+
+Val[0][0]: 9 Val[0][1]: 12 Val[0][2]: -1 
+Val[1][0]: -1 Val[1][1]: -1 Val[1][2]: -1 
+Val[2][0]: -1 Val[2][1]: -1 Val[2][2]: -1 
+
+Val[0][0]: 9 Val[0][1]: 12 Val[0][2]: 15 
+Val[1][0]: -1 Val[1][1]: -1 Val[1][2]: -1 
+Val[2][0]: -1 Val[2][1]: -1 Val[2][2]: -1 
+
+Val[0][0]: 9 Val[0][1]: 12 Val[0][2]: 15 
+Val[1][0]: 18 Val[1][1]: -1 Val[1][2]: -1 
+Val[2][0]: -1 Val[2][1]: -1 Val[2][2]: -1 
+
+Val[0][0]: 9 Val[0][1]: 12 Val[0][2]: 15 
+Val[1][0]: 18 Val[1][1]: 21 Val[1][2]: -1 
+Val[2][0]: -1 Val[2][1]: -1 Val[2][2]: -1 
+
+Searching Elements:
+Searched Element: 0
+Not found
+Searched Element: 1
+Not found
+Searched Element: 9
+Found
+Searched Element: 15
+Found
+Searched Element: 20
+Not found
+Searched Element: 18
+Found
+Searched Element: 21
+Found
+Searched Element: 4
+Not found
+Searched Element: 3
+Not found
+Searched Element: 17
+Not found
