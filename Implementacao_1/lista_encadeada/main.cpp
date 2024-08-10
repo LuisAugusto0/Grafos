@@ -34,6 +34,10 @@ int main() {
     list.insert(15, 1);
     std::cout << "List after inserting 15 at index 1: " << list << std::endl; // Expected: {10, 15, 20}
 
+    // Check if end pointer is on the correct node (if its not insert end will not insert at end)
+    list.insertEnd(23);
+    std::cout << "List after inserting 23 at index end: " << list << std::endl; // Expected: {10, 15, 20}
+
     // Test the getArray method
     std::unique_ptr<int[]> array = list.getArray();
     std::cout << "Array representation of the list: {";

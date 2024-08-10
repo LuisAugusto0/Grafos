@@ -52,6 +52,7 @@ private:
 
 public:
     Node *header = new Node(T());
+    Node *end = header;
     std::size_t size = 0;
 
     // Constructor
@@ -63,7 +64,7 @@ public:
     } 
 
     T peekEnd() { 
-        return get(size-1); 
+       return this->end->value;
     }
 
     T get(std::size_t index) {
@@ -82,11 +83,18 @@ public:
 
     // Insertion methods    
     void insertStart(T value)  noexcept { 
-        insert(value, 0); 
+        Node *newNode = new Node(value);
+        newNode->next = this->header->next;
+        this->header->next = newNode;
+
+        if (this->end == this->header) end = newNode;
+        this->size++;
     }
 
     void insertEnd(T value) noexcept { 
-        insert(value, this->size); 
+        this->end->next = new Node(value); 
+        this->end = this->end->next;
+        this->size++;
     }
     
     void insert(T value, std::size_t index) {
@@ -103,6 +111,7 @@ public:
         Node *newNode = new Node(value);
         newNode->next = node->next;
         node->next = newNode;
+        if (node == end) newNode = end;
         this->size++;
     }
 
@@ -131,6 +140,9 @@ public:
         node->next = rm->next;
         T res = rm->value;
         this->size--;
+
+        if (rm == this->end) 
+            this->end = node;
 
         delete rm;
         return res;
@@ -161,7 +173,7 @@ public:
         return oss.str();
     }
 
-    std::unique_ptr<T[]> getArray() {
+    std::unique_ptr<T[]> getArray() noexcept {
         std::unique_ptr<T[]> array(new T[this->size]);
         Node *node = this->header;
         for (std::size_t i = 0; i < this->size; i++) {
