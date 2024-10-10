@@ -3,6 +3,7 @@
 #include <vector>
 #include <queue>
 #include <utility>  
+#include <stack>
 #include "LinkedList.hpp"
 
 using namespace std;
@@ -72,105 +73,149 @@ public:
         }
     }
 
+    // Função para exibir o caminho a partir de um vetor de antecessores
+    void showPath(int src, int dest, const vector<int>& parent) {
+        if (parent[dest] == -1) {
+            cout << "Nao ha caminho do vertice " << src << " para o vertice " << dest << ".\n";
+            return;
+        }
 
-    // Algoritmo de Dijkstra
+        stack<int> caminho;
+        int atual = dest;
+
+        // Reconstrói o caminho do destino até a origem
+        while (atual != src) {
+            caminho.push(atual);
+            atual = parent[atual];
+        }
+        caminho.push(src);
+
+        // Exibe o caminho reconstruído
+        cout << "Caminho do vertice " << src << " ate o vertice " << dest << ": ";
+        while (!caminho.empty()) {
+            cout << caminho.top();
+            caminho.pop();
+            if (!caminho.empty()) cout << " -> ";
+        }
+        cout << endl;
+    }
+
+    // Função que executa o dijkstra a partir de um vértice inicial (src)
     void dijkstra(int src) {
         vector<int> distance(vertices, numeric_limits<int>::max());
+        vector<int> parent(vertices, -1);
         distance[src] = 0;
+        parent[src] = src;
 
-        //Fila de prioridade organizada do menor para o maior, garantindo que sempre o menor peso é utilizado no pop
         priority_queue<pair<int, int>, vector<pair<int, int>>, CompareSecond> queue;
         queue.push({src, 0});
 
-        //Enquanto a fila de execução for vazia
         while (!queue.empty()) {
             pair<int, int> actual = queue.top();
             queue.pop();
-            
-            Node<pair<int, int>>* node = adjList[actual.first].getBegin();
+
+            int u = actual.first;
+            Node<pair<int, int>>* node = adjList[u].getBegin();
             while (node != nullptr) {
                 int v = node->value->first;
                 int weight = node->value->second;
-                //Comparação para determinar o minimo e caso o caminho atual seja o menor, atualizar a distância 
-                // e adicionar o vertice na fila de prioridade (o que remove a necessidade de um vetor de visitados)
-                if(distance[actual.first] + weight < distance[v]){
-                    distance[v] = distance[actual.first] + weight;
+
+                if (distance[u] + weight < distance[v]) {
+                    distance[v] = distance[u] + weight;
+                    parent[v] = u;
                     queue.push({v, distance[v]});
                 }
                 node = node->next;
             }
-            cout << "Analized vertex " << actual.first << ". Current total weight - " << distance[actual.first] << endl;
+            cout << "Vertice analisado: " << u << ". Distancia atual: " << distance[u] << endl;
         }
 
-        // Exibe as distâncias mínimas
-        cout << endl << "Distancias do vertice " << src << ":\n";
+        cout << endl << "Distancias a partir do vertice " << src << ":\n";
         for (int i = 0; i < vertices; i++) {
             cout << "Vertice " << i << ": " << distance[i] << endl;
+            showPath(src, i, parent);
         }
         cout << finalLine;
     }
 
-    // Algoritmo de Min(max()) mas sem a modificação na fila de prioridade pois não há necessidade
-    void minMax(int src, int target) {
+    // Algoritmo de Minmax para todos os vértices
+    void minMax(int src) {
         vector<int> maxV(vertices, numeric_limits<int>::max());
+        vector<int> parent(vertices, -1);
         maxV[src] = 0;
-        pair<int, int> actual = {-1, -1};
+        parent[src] = src;
 
-        //Fila de prioridade organizada do menor para o maior
         priority_queue<pair<int, int>, vector<pair<int, int>>, CompareSecond> queue;
         queue.push({src, 0});
 
-        //Enquanto o target não tiver sido atingido
-        while (actual.first != target) {
-            actual = queue.top();
+        while (!queue.empty()) {
+            pair<int, int> actual = queue.top();
             queue.pop();
 
-            Node<pair<int, int>>* node = adjList[actual.first].getBegin();
+            int u = actual.first;
+            Node<pair<int, int>>* node = adjList[u].getBegin();
             while (node != nullptr) {
                 int v = node->value->first;
                 int weight = node->value->second;
-                //condição para saber se vértice já foi visitado, caso já foi, teoricamente não deveria ser necessário fazer a verificação de distãncia da aresta novamente (devido a fila de prioridade)
-                maxV[v] = min(max(maxV[actual.first], weight), maxV[v]);
-                queue.push({v, weight});
+
+                int new_value = min(max(maxV[u], weight), maxV[v]);
+                if (new_value < maxV[v]) {
+                    maxV[v] = new_value;
+                    parent[v] = u;
+                    queue.push({v, maxV[v]});
+                }
                 node = node->next;
             }
-            cout << endl << "Analized vertex " << actual.first << ". Current value - " << maxV[actual.first];
+            cout << "Vertice analisado: " << u << ". Valor atual de Minmax: " << maxV[u] << endl;
         }
 
-        cout << endl << "Minmax do conjunto (src, target) (" << src << " - "<< target << ") = " << maxV[target] << finalLine;
+        cout << endl << "Valores Minmax a partir do vertice " << src << ":\n";
+        for (int i = 0; i < vertices; i++) {
+            cout << "Vertice " << i << ": " << maxV[i] << endl;
+            showPath(src, i, parent);
+        }
+        cout << finalLine;
     }
 
-    // Algoritmo de Min(max()) mas sem a modificação na fila de prioridade pois não há necessidade
-    void maxMin(int src, int target) {
+    // Algoritmo de Maxmin para todos os vértices
+    void maxMin(int src) {
         vector<int> minV(vertices, numeric_limits<int>::min());
+        vector<int> parent(vertices, -1);
         minV[src] = numeric_limits<int>::max();
-        pair<int, int> actual = {-1, -1};
+        parent[src] = src;
 
-        //Fila de prioridade organizada do maior para o menor (para garantir o máximo sempre)
         priority_queue<pair<int, int>, vector<pair<int, int>>, CompareSecondInverted> queue;
-        queue.push({0, src});
+        queue.push({src, minV[src]});
 
-        //Enquanto o target não tiver sido atingido
-        while (actual.first != target) {
-            actual = queue.top();
+        while (!queue.empty()) {
+            pair<int, int> actual = queue.top();
             queue.pop();
 
-            Node<pair<int, int>>* node = adjList[actual.first].getBegin();
+            int u = actual.first;
+            Node<pair<int, int>>* node = adjList[u].getBegin();
             while (node != nullptr) {
                 int v = node->value->first;
                 int weight = node->value->second;
-                //condição para saber se vértice já foi visitado, caso já foi, teoricamente não deveria ser necessário fazer a verificação de distãncia da aresta novamente (devido a fila de prioridade)
-                minV[v] = max(min(minV[actual.first], weight), minV[v]);
-                queue.push({v, minV[v]});
+
+                int new_value = max(min(minV[u], weight), minV[v]);
+                if (new_value > minV[v]) {
+                    minV[v] = new_value;
+                    parent[v] = u;
+                    queue.push({v, minV[v]});
+                }
                 node = node->next;
             }
-
-            cout << endl << "Analized vertex " << actual.first << ". Current value - " << minV[actual.first];
+            cout << "Vertice analisado: " << u << ". Valor atual de Maxmin: " << minV[u] << endl;
         }
-        minV[src] = 0;
 
-        cout << endl << "Maxmin do conjunto (src, target) (" << src << " - "<< target << ") : " << minV[target] << finalLine;
+        cout << endl << "Valores Maxmin a partir do vertice " << src << ":\n";
+        for (int i = 0; i < vertices; i++) {
+            cout << "Vertice " << i << ": " << minV[i] << endl;
+            showPath(src, i, parent);
+        }
+        cout << finalLine;
     }
+
 
 };
 
@@ -196,10 +241,10 @@ int main() {
     g.dijkstra(0);
 
     cout << "\nExecutando Minmax a partir do vertice 0 ate o vertice 4:\n";
-    g.minMax(0, 4);
+    g.minMax(0);
 
     cout << "\nExecutando Maxmin a partir do vertice 0 ate o vertice 4:\n";
-    g.maxMin(0, 4);
+    g.maxMin(0);
 
     return 0;
 }
